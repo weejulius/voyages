@@ -12,7 +12,8 @@ import com.wee.voyages.domain.model.voyage.VoyageNum;
 import com.wee.voyages.domain.model.voyage.VoyageRepository;
 import com.wee.voyages.infrastructure.persistence.config.EntityManagerBinder;
 import com.wee.voyages.infrastructure.persistence.config.transaction.Transactional;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -37,7 +38,7 @@ public class VoyageController extends HttpServlet {
     @Inject
     private EntityManagerBinder binder;
 
-    private Logger log = Logger.getLogger(VoyageController.class);
+    private Logger log = LoggerFactory.getLogger(VoyageController.class);
 
     @Override
     public void init() throws ServletException {
@@ -79,7 +80,7 @@ public class VoyageController extends HttpServlet {
         }
 
         if (idcardNum != null) {
-            log.debug("carry a customer.");
+            log.debug("carry a model.");
             Customer customer = new Customer(new IDCardNum(idcardNum), Sex.female, null, null, null, null, null, null);
             customerRepository.store(customer);
             voyageService.carry(voyage, customer);

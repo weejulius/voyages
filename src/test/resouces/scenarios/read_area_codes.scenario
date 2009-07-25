@@ -1,0 +1,5 @@
+Given a code is  110000,110102,110103,110117
+Then area codes has the code is true
+
+Given a code is 313020,321312,11000,110118
+Then area codes has the code is false

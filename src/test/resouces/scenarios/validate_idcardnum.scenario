@@ -1,0 +1,8 @@
+Scenario: validate 15 bit IDCardNum
+Given IDCardNums are 11000019900203987,12010919980302908
+Then the validity of IDCardNums is true
+
+Given IDCardNums are 31302019980302908
+Then the validity of IDCardNums is false
+
+

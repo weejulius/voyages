@@ -13,7 +13,7 @@ public class CustomerRepositoryImpl extends AbstractRepository implements Custom
     public Customer find(IDCardNum idcardNum) {
         Customer customer = (Customer)
                 createQuery(
-                        "select customer from Customer customer where customer.idcardNum =:idcardNum")
+                        "select model from Customer model where model.idcardNum =:idcardNum")
                         .setParameter("idcardNum", idcardNum).getSingleResult();
        // closeEntityManager();
         return customer;

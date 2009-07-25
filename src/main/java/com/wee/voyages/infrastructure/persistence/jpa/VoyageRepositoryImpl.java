@@ -14,7 +14,7 @@ import java.util.List;
 public class VoyageRepositoryImpl extends AbstractRepository implements VoyageRepository {
     public CustomerLog findCustomerLog(Voyage voyage, Customer customer) {
         CustomerLog log = (CustomerLog) createQuery(
-                "select log from CustomerLog log where log.customer =:customer and log.voyage =:voyage"
+                "select log from CustomerLog log where log.model =:model and log.voyage =:voyage"
         ).setParameter(1, customer).setParameter(2, voyage).getSingleResult();
        // closeEntityManager();
         return log;
@@ -22,7 +22,7 @@ public class VoyageRepositoryImpl extends AbstractRepository implements VoyageRe
 
     public List<CustomerLog> findCustomerLog(Customer customer) {
         List<CustomerLog> logs = createQuery(
-                "select log from CustomerLog log where log.customer =:customer"
+                "select log from CustomerLog log where log.model =:model"
         ).setParameter(1, customer).getResultList();
      //   closeEntityManager();
         return logs;

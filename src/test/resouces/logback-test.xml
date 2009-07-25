@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<configuration>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <Pattern>%d{HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</Pattern>
+        </layout>
+    </appender>
+
+    <root level="debug">
+        <appender-ref ref="STDOUT"/>
+    </root>
+
+    <logger name="org.hibernate">
+        <level value="debug"/>
+    </logger>
+     <logger name="org.hibernate.SQL">
+        <level value="debug"/>
+    </logger>
+     <logger name="org.hibernate.transaction">
+        <level value="debug"/>
+    </logger>
+     <logger name="org.hibernate.hbm2ddl">
+        <level value="debug"/>
+    </logger>
+    <logger name="org.hibernate.jdbc">
+        <level value="debug"/>
+    </logger>
+</configuration>

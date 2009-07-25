@@ -1,0 +1,5 @@
+Given birthdays are 20090504,20030302,19990228
+Then the validity of birthdays is true
+
+Given birthdays are 20090231,20090332,20091321,20090229,2000321231
+Then the validity of birthdays is false

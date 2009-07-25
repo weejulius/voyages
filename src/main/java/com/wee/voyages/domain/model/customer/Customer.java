@@ -67,6 +67,6 @@ public class Customer {
         return idcardNum;
     }
 
-    public Customer() {
+    protected Customer() {
     }
 }

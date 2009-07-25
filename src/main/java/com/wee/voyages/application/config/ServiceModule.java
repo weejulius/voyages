@@ -2,9 +2,8 @@ package com.wee.voyages.application.config;
 
 import com.google.inject.AbstractModule;
 import com.wee.voyages.application.VoyageService;
-import com.wee.voyages.application.impl.VoyageServiceImpl;
 import com.wee.voyages.application.impl.InspectingServiceImpl;
-import com.wee.voyages.domain.model.inspecting.Inspecting;
+import com.wee.voyages.application.impl.VoyageServiceImpl;
 import com.wee.voyages.domain.service.InspectingService;
 
 /**
@@ -12,10 +11,10 @@ import com.wee.voyages.domain.service.InspectingService;
  * Date: 2009-7-13
  * Time: 22:09:19
  */
-public class ServiceModule extends AbstractModule{
+public class ServiceModule extends AbstractModule {
     @Override
-    protected void configure() {
-       bind(VoyageService.class).to(VoyageServiceImpl.class);
-       bind(InspectingService.class).to(InspectingServiceImpl.class);
+    final protected void configure() {
+        bind(VoyageService.class).to(VoyageServiceImpl.class);
+        bind(InspectingService.class).to(InspectingServiceImpl.class);
     }
 }
