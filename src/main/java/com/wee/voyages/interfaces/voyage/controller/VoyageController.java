@@ -11,6 +11,7 @@ import com.wee.voyages.domain.model.voyage.VoyageRepository;
 import javax.servlet.ServletException;
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * User: weejulius
@@ -27,6 +28,20 @@ public class VoyageController extends Controller {
     @Inject
     private CustomerRepository customerRepository;
 
+    private AtomicInteger total;
+
+    private final  int PAGE_SIZE=3;
+
+
+    @Override
+    protected void startup() {
+        total = new AtomicInteger(totalOfVoyages().intValue());
+    }
+
+    private Number totalOfVoyages() {
+        return voyageRepository.size();
+    }
+
     /**
      * As a user
      * I want to new a voyage
@@ -35,18 +50,23 @@ public class VoyageController extends Controller {
      * @throws IOException
      * @throws ServletException
      */
-   
+
     public void create(ReqAndResp reqAndResp) throws IOException, ServletException {
         try {
             final Long shipId = reqAndResp.getLong("ship");
             displayCreatedVoyage(reqAndResp, shipId);
+            increateTotalOfVoyages();
         } catch (NoSuchRequestParameter e) {
             displayCreateForm(reqAndResp);
         }
     }
 
+    private void increateTotalOfVoyages() {
+            total.incrementAndGet();
+    }
+
     /**
-     * retrieve all the voayges.
+     * retrieve all the voayges at the range.
      *
      * @param reqAndResp request and response holder
      * @throws IOException      io exception
@@ -54,9 +74,17 @@ public class VoyageController extends Controller {
      */
 
     public void list(ReqAndResp reqAndResp) throws IOException, ServletException {
+
+        int id = reqAndResp.getInt("id");
+        Page page = new Page(PAGE_SIZE, total.get());
+        Range range = page.index(id);
         transaction().begin();
-        List<Voyage> voyages = voyageRepository.list();
-        Controllers.load(reqAndResp, "voyages", voyages).forward(view("origin"));
+        log().debug("range is {} - {}",range.start(),range.end());
+        List<Voyage> voyages = voyageRepository.list(range.start(),PAGE_SIZE);
+        Controllers.load(reqAndResp,
+                Models.add("page",page).add("voyages",voyages)
+        ).forward(view("origin"));
+        log().warn("total is {}/{}",total,totalOfVoyages());
         transaction().close();
     }
 
@@ -78,7 +106,7 @@ public class VoyageController extends Controller {
         Controllers.load(reqAndResp, "voyage", voyageId + " has started").redirect("/voyages/voyage/" + voyageId);
     }
 
- 
+
     public void index(ReqAndResp reqAndResp) throws IOException, ServletException {
         Long voyageId = reqAndResp.getLong("id");
         transaction().begin();

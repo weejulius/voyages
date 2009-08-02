@@ -62,10 +62,16 @@ public class VoyageRepositoryImpl extends AbstractRepository implements VoyageRe
     }
 
     @SuppressWarnings(value = "unchecked")
-    public List<Voyage> list() {
+    public List<Voyage> list(int start,int end) {
         return (List<Voyage>) createQuery(
                 "select voyage from Voyage voyage join fetch voyage.ship "
-        ).getResultList();
+        ).setFirstResult(start).setMaxResults(end).getResultList();
+    }
+
+    public Number size() {
+        return (Number)createQuery(
+                "select count(voyage) from Voyage voyage"
+        ).getSingleResult();
     }
 
     public Voyage find(Long voyageId) {

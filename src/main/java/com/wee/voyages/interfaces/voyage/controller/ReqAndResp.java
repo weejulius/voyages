@@ -75,7 +75,7 @@ public class ReqAndResp {
     public long getLong(String param) {
         String value = get(param);
         try {
-            return Integer.parseInt(value);
+            return Long.parseLong(value);
         } catch (NumberFormatException e) {
             throw new InvalidRequestParameter("param " + param + " ,the value <" + value + "> is not a long format");
         }
@@ -84,6 +84,16 @@ public class ReqAndResp {
     public void putNotEmptyValueParameter(String key, String value) {
         if (Strings.notBlank(value)) {
             params.put(key, Strings.asArray(value));
+        }
+    }
+
+
+    public int getInt(String param) {
+        String value = get(param);
+        try {
+            return Integer.parseInt(value);
+        } catch (NumberFormatException e) {
+            throw new InvalidRequestParameter("param " + param + " ,the value <" + value + "> is not a long format");
         }
     }
 }

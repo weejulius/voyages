@@ -41,6 +41,11 @@ public class Controller extends HttpServlet {
         Injector injector = (Injector) getServletContext().getAttribute(Injector.class.getName());
         injector.injectMembers(this);
         initView();
+        startup();
+    }
+
+    protected void startup(){
+
     }
 
     protected String view(String viewName) {
@@ -53,6 +58,7 @@ public class Controller extends HttpServlet {
             reqAndResp.parseRequestURI(urlMapping);
             handleRequest(reqAndResp);
         } catch (InvalidRequestURI e) {
+            log.warn("invalid request rui {}",e.getMessage());
             forwardExceptionView(reqAndResp, e, "serviceerror");
         }
     }
@@ -68,7 +74,7 @@ public class Controller extends HttpServlet {
         try {
             reqAndResp.executeAction(this, reqAndResp);
         } catch (InvocationTargetException e) {
-            log.debug("execute action exception: {}", e.getCause().getStackTrace());
+            log.warn("execute action exception: {}", e.getCause().getStackTrace());
             forwardExceptionView(reqAndResp, e.getCause(), "serviceerror");
         } catch (NoSuchMethodException e) {
             forwardExceptionView(reqAndResp, e, "service unavaliable");
