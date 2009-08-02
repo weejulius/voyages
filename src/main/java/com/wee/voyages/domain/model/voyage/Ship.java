@@ -1,6 +1,7 @@
 package com.wee.voyages.domain.model.voyage;
 
 import javax.persistence.*;
+import java.util.Set;
 
 /**
  * User: weejulius
@@ -16,9 +17,9 @@ public class Ship {
     private String name;
     private int capacity;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "SHIP_SHIPPINGCOMPANY_ID")
+    @JoinColumn(name = "SHIPPINGCOMPANY_ID")
     private ShippingCompany company;
-
+   
 
     public Ship(int capacity,String name, ShippingCompany company) {
         this.capacity = capacity;
@@ -33,6 +34,10 @@ public class Ship {
 
     public String name(){
         return name;
+    }
+
+    public String id(){
+        return ""+id;
     }
 
     protected Ship() {

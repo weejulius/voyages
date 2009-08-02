@@ -1,9 +1,7 @@
 package com.wee.voyages.application;
 
+import com.wee.voyages.domain.model.customer.IDCardNum;
 import com.wee.voyages.domain.model.voyage.Voyage;
-import com.wee.voyages.domain.model.voyage.Ship;
-import com.wee.voyages.domain.model.voyage.VoyageNum;
-import com.wee.voyages.domain.model.customer.Customer;
 
 /**
  * User: weejulius
@@ -11,8 +9,11 @@ import com.wee.voyages.domain.model.customer.Customer;
  * Time: 10:50:03
  */
 public interface VoyageService {
-     Voyage newVoyage(VoyageNum voyageNum,Ship ship);
-     void start(Voyage voyage);
-     void end(Voyage voyage);
-     void carry(Voyage voyage,Customer customer);
+    Voyage newVoyage(Long shipId);
+
+    void start(Long voyageId);
+
+    void end(Long voyageId);
+
+    void carry(Long voyageId, IDCardNum idcardNum);
 }

@@ -9,6 +9,7 @@ package com.wee.voyages.interfaces.config; /**
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.wee.voyages.infrastructure.persistence.config.RepositoryModule;
+import com.wee.voyages.infrastructure.persistence.config.sample.SampleData;
 import com.wee.voyages.application.config.ServiceModule;
 
 import javax.servlet.ServletContextEvent;
@@ -26,6 +27,7 @@ public class ContextListener implements ServletContextListener{
         Injector injector=Guice.createInjector(new RepositoryModule(),new ServiceModule());
         ServletContext context= servletContextEvent.getServletContext();
         context.setAttribute(INJECTOR_NAME,injector);
+         new SampleData().startup();
     }
 
     public void contextDestroyed(ServletContextEvent servletContextEvent) {

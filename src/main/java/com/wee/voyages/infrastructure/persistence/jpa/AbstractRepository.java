@@ -35,4 +35,9 @@ public class AbstractRepository {
         return emb.createQuery(query);
     }
 
+    @SuppressWarnings(value = "unchecked")
+    public Object find(Class clazz, Object primaryKey) {
+        return entityManager().find(clazz, primaryKey);
+    }
+
 }

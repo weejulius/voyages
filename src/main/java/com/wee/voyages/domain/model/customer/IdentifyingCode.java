@@ -40,7 +40,7 @@ public class IdentifyingCode {
             int[] result = new int[chars.length];
             int index = 0;
             for (char aChar : chars) {
-                result[index] = chars[index] - 48;
+                result[index] = aChar - 48;
                 index++;
             }
             return result;

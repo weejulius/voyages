@@ -15,9 +15,8 @@ import java.util.List;
  */
 public class SampleData {
     private List<Ship> ships = new ArrayList<Ship>();
-    private List<ShippingCompany> companys = new ArrayList<ShippingCompany>();
-    @Inject
-    private EntityManagerBinder binder;//=new EntityManagerBinder();
+    private List<ShippingCompany> companys = new ArrayList<ShippingCompany>();    
+    private EntityManagerBinder binder=new EntityManagerBinder();
 
     private void initialShippingComanys() {
         companys.add(new ShippingCompany("Zoerm", "yoouu"));

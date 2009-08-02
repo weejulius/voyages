@@ -5,7 +5,6 @@ package com.wee.voyages.application.validatation.validator;
  * Date: 2009-7-23
  * Time: 11:27:52
  */
-public interface Validator<T> {    
-    void validate(T entity);
-    boolean isValid(T entity);
+public interface Validator {
+    <T> void validate(T entity);
 }

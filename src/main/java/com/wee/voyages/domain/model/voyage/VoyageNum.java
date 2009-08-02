@@ -1,7 +1,7 @@
 package com.wee.voyages.domain.model.voyage;
 
-import javax.persistence.Embeddable;
 import javax.persistence.Column;
+import javax.persistence.Embeddable;
 
 /**
  * User: weejulius
@@ -10,14 +10,15 @@ import javax.persistence.Column;
  */
 @Embeddable
 public class VoyageNum {
-    @Column(name = "VOYAGE_NUM",nullable = false,unique = true)
+    @Column(name = "VOYAGE_NUM", nullable = false, unique = true)
     private String num;
 
     public VoyageNum(String num) {
+
         this.num = num;
     }
 
-     //TODO
+    //TODO
     @Override
     public boolean equals(Object obj) {
         boolean result = false;
@@ -28,8 +29,12 @@ public class VoyageNum {
         return result;
     }
 
-    public String voyageNum(){
+    public String voyageNum() {
         return num;
     }
-    protected VoyageNum(){}
+
+    protected VoyageNum() {
+    }
+
+
 }

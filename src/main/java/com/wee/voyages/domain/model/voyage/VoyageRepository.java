@@ -27,7 +27,11 @@ public interface VoyageRepository {
 
     public void storeShippingCompany(ShippingCompany company);
 
-    public Ship findShip(String name);
+    public Ship findShip(Long id);
 
-    public Voyage find(VoyageNum num);
+    public List<Ship> listShip();
+
+    public Voyage find(Long voyageId);
+
+    public List<Voyage> list();
 }

@@ -12,18 +12,18 @@
     </root>
 
     <logger name="org.hibernate">
-        <level value="debug"/>
+        <level value="warn"/>
     </logger>
      <logger name="org.hibernate.SQL">
-        <level value="debug"/>
+        <level value="warn"/>
     </logger>
      <logger name="org.hibernate.transaction">
-        <level value="debug"/>
+        <level value="warn"/>
     </logger>
      <logger name="org.hibernate.hbm2ddl">
-        <level value="debug"/>
+        <level value="warn"/>
     </logger>
     <logger name="org.hibernate.jdbc">
-        <level value="debug"/>
+        <level value="warn"/>
     </logger>
 </configuration>

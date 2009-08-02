@@ -1,7 +1,5 @@
 package com.wee.voyages.application.validatation.rule;
 
-import com.wee.voyages.domain.model.customer.IDCardNum;
-import com.wee.voyages.application.validatation.rule.BrokenRule;
 import com.wee.voyages.application.validatation.RuleResultHolder;
 
 import java.util.regex.Pattern;
@@ -12,26 +10,19 @@ import java.util.regex.Pattern;
  * Time: 14:54:24
  */
 public class DateBrokenRule implements BrokenRule<String> {
+
     private final static String LEAP_YEAR_REG = "[19|20][0-9]{2}((01|03|05|07|08|10|12)(0[1-9]|[1-2][0-9]|3[0-1])|" +
             "(04|06|09|11)(0[1-9]|[1-2][0-9]|30)|02(0[1-9]|[12][0-9]))";
 
     private final static String NON_LEAP_YEAR_REG = "[19|20][0-9]{2}((01|03|05|07|08|10|12)(0[1-9]|[1-2][0-9]|3[0-1])|" +
             "(04|06|09|11)(0[1-9]|[1-2][0-9]|30)|02(0[1-9]|1[0-9]|1[0-9]|2[0-8]))";
-    private final RuleResultHolder ruleResults = new RuleResultHolder();
 
-    public RuleResultHolder enforce(String date) {
+    public void enforce(String date) {
         Pattern pattern = Pattern.compile(getReg(date));
         if (!pattern.matcher(date).find()) {
-            ruleResults.newRuleException("wrong birthday format");
+            Throws.brokenRuleException("wrong birthday format");
         }
-        return ruleResults;
     }
-
-
-    public RuleResultHolder enforce(IDCardNum idcardNum) {
-        return enforce(idcardNum.birthday());
-    }
-
 
     public String getReg(String date) {
         String result = NON_LEAP_YEAR_REG;
@@ -55,7 +46,7 @@ public class DateBrokenRule implements BrokenRule<String> {
     private void validateLengthOfDate(String date) {
         boolean result = date.length() == 8;
         if (!result) {
-            ruleResults.newBrokenRuleException("wrong length of date.");
+            Throws.brokenRuleException("wrong length of date.");
         }
     }
 

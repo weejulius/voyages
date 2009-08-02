@@ -5,8 +5,8 @@ import com.wee.voyages.domain.model.customer.CustomerLog;
 
 import javax.persistence.*;
 import java.util.Date;
-import java.util.Set;
 import java.util.HashSet;
+import java.util.Set;
 
 /**
  * User: weejulius
@@ -17,20 +17,18 @@ import java.util.HashSet;
 public class Voyage {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long Id;
-    @Embedded
-    private VoyageNum voyageNum;
+    private long id;
     @Enumerated
     private Status status;
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "SHIP_ID")
     private Ship ship;
     @Temporal(value = TemporalType.DATE)
     private Date leaveTime;
     @Temporal(value = TemporalType.DATE)
     private Date arriveTime;
     @OneToMany(mappedBy = "voyage")
-    // @JoinColumn(name = "VOYAGE_CUSTOMERLOG_ID")
-    private Set<CustomerLog> customerLogs=new HashSet<CustomerLog>();
+    private Set<CustomerLog> customerLogs = new HashSet<CustomerLog>();
 
     //singleton.
     //TODO
@@ -38,8 +36,7 @@ public class Voyage {
     private OverCarryRule overCarryRule = new OverCarryRule(1.20f);
 
 
-    public Voyage(VoyageNum voyageNum,Ship ship) {
-        this.voyageNum=voyageNum;
+    public Voyage(Ship ship) {
         this.status = Status.Init;
         this.ship = ship;
 
@@ -50,7 +47,7 @@ public class Voyage {
             status = Status.Started;
             this.leaveTime = leaveTime;
         } else {
-            throw new RuntimeException();
+            throw new DomainObjectBusinessError("voyage can not start due to it is not init status");
         }
     }
 
@@ -59,19 +56,23 @@ public class Voyage {
             status = Status.End;
             this.arriveTime = arriveTime;
         } else {
-            throw new RuntimeException();
+            throw new DomainObjectBusinessError("voyage can not end due to voyage has been ended or unstarted.");
         }
     }
 
     public CustomerLog carry(Customer customer) {
-        CustomerLog log = null;
+        CustomerLog log;
         if (status == Status.Started && notOverCarry()) {
             log = new CustomerLog(new Date(), this, customer);
             customerLogs.add(log);
         } else {
-            throw new RuntimeException();
+            throw new DomainObjectBusinessError("can not carry customer before start voyage.");
         }
         return log;
+    }
+
+    public String id() {
+        return "" + id;
     }
 
     private boolean notOverCarry() {
@@ -82,14 +83,14 @@ public class Voyage {
         return ship;
     }
 
+    public Status status() {
+        return status;
+    }
+
     public Set<CustomerLog> customerLogs() {
         return customerLogs;
     }
 
-    public VoyageNum voyageNum(){
-        return voyageNum;
-    }
-
-    public Voyage() {
+    protected Voyage() {
     }
 }

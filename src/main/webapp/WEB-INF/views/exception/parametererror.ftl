@@ -6,11 +6,7 @@
     <title></title>
 </head>
 <body>
-<!-- voyage actions-->
-    <div>
-      <form action="voyage">
-          <input type="text"/>
-      </form>
-    </div>
+       <h3>exception:</h3>
+         ${exception}
 </body>
 </html>

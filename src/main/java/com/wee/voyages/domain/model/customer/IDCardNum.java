@@ -1,7 +1,11 @@
 package com.wee.voyages.domain.model.customer;
 
+import com.wee.voyages.application.validatation.Validatable;
+import com.wee.voyages.application.validatation.Validators;
+
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.persistence.Transient;
 
 /**
  * User: weejulius
@@ -9,24 +13,29 @@ import javax.persistence.Embeddable;
  * Time: 9:01:01
  */
 @Embeddable
-public class IDCardNum {
+public class IDCardNum implements Validatable {
     @Column(length = 30, unique = true, nullable = false)
     private String idcardNum;
+    @Transient
     private String areaCode;
+    @Transient
     private String birthday;
+    @Transient
     private String sequence;
+    @Transient
     private String identifyingCode;
 
     public IDCardNum(String idcardNum) {
         this.idcardNum = idcardNum;
-        areaCode = this.idcardNum.substring(0 - 6);
+        areaCode = this.idcardNum.substring(0,6);
         initialBirthday(this.idcardNum);
+        validate();
     }
 
     private void initialBirthday(String idcardNum) {
-        birthday = idcardNum.substring(6 - 10);
+        birthday = idcardNum.substring(6,10);
         if (isFifteenBit(idcardNum)) {
-            birthday = idcardNum.substring(6 - 8);
+            birthday = idcardNum.substring(6,8);
         }
     }
 
@@ -67,5 +76,9 @@ public class IDCardNum {
     }
 
     public IDCardNum() {
+    }
+
+    public void validate() {
+        Validators.validate(this);
     }
 }

@@ -16,6 +16,7 @@ public class ShippingCompany {
     @Column(unique = true,nullable = false)
     private String name;
     private String legalRepresentative;
+    @SuppressWarnings({"JpaDataSourceORMInspection"})
     @OneToMany
     @JoinColumn(name = "SHIP_SHIPPINGCOMPANY_ID")
     private Set<Ship> ships;

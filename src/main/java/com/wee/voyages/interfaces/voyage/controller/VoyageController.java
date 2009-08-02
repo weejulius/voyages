@@ -1,93 +1,114 @@
 package com.wee.voyages.interfaces.voyage.controller;
 
-import com.google.inject.*;
+import com.google.inject.Inject;
 import com.wee.voyages.application.VoyageService;
-import com.wee.voyages.domain.model.customer.Customer;
+import com.wee.voyages.application.validatation.rule.NoSuchRequestParameter;
 import com.wee.voyages.domain.model.customer.CustomerRepository;
-import com.wee.voyages.domain.model.customer.IDCardNum;
-import com.wee.voyages.domain.model.customer.Sex;
 import com.wee.voyages.domain.model.voyage.Ship;
 import com.wee.voyages.domain.model.voyage.Voyage;
-import com.wee.voyages.domain.model.voyage.VoyageNum;
 import com.wee.voyages.domain.model.voyage.VoyageRepository;
-import com.wee.voyages.infrastructure.persistence.config.EntityManagerBinder;
-import com.wee.voyages.infrastructure.persistence.config.transaction.Transactional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Map;
+import java.util.List;
 
 /**
  * User: weejulius
  * Date: 2009-7-13
  * Time: 20:45:24
  */
-@Singleton
-public class VoyageController extends HttpServlet {
+
+
+public class VoyageController extends Controller {
     @Inject
     private VoyageService voyageService;
     @Inject
     private VoyageRepository voyageRepository;
     @Inject
     private CustomerRepository customerRepository;
-    @Inject
-    private EntityManagerBinder binder;
 
-    private Logger log = LoggerFactory.getLogger(VoyageController.class);
-
-    @Override
-    public void init() throws ServletException {
-        super.init();
-        Injector injector = (Injector) getServletContext().getAttribute(Injector.class.getName());
-        injector.injectMembers(this);
-        Map<Key<?>, Binding<?>> bindings = injector.getBindings();
-        for (Map.Entry<Key<?>, Binding<?>> binding : bindings.entrySet()) {
-            log.debug("key:" + binding.getKey() + "    |      binding:" + binding.getValue());
+    /**
+     * As a user
+     * I want to new a voyage
+     *
+     * @param reqAndResp request and response holder
+     * @throws IOException
+     * @throws ServletException
+     */
+   
+    public void create(ReqAndResp reqAndResp) throws IOException, ServletException {
+        try {
+            final Long shipId = reqAndResp.getLong("ship");
+            displayCreatedVoyage(reqAndResp, shipId);
+        } catch (NoSuchRequestParameter e) {
+            displayCreateForm(reqAndResp);
         }
-        // new SampleData().startup();
-
     }
 
-    @Override
-    @Transactional
-    protected void doGet(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws ServletException, IOException {
+    /**
+     * retrieve all the voayges.
+     *
+     * @param reqAndResp request and response holder
+     * @throws IOException      io exception
+     * @throws ServletException servlet exception
+     */
 
-        String action = httpServletRequest.getParameter("action");
-        String idcardNum = httpServletRequest.getParameter("idcardNum");
-        VoyageNum voyageNum = new VoyageNum(httpServletRequest.getParameter("voyageNum"));
-        log.debug("action is " + action);
-
-
-        binder.begin();
-        Voyage voyage = null;
-        if ("new".equals(action)) {
-            Ship ship = voyageRepository.findShip("Seewt");
-            voyage = voyageService.newVoyage(voyageNum, ship);
-            log.debug("voyage added.");
-        } else if ("start".equals(action)) {
-            voyage = voyageRepository.find(voyageNum);
-            voyageService.start(voyage);
-            log.debug("voyage " + voyage.voyageNum() + " started.");
-        } else if ("end".equals(action)) {
-            voyage = voyageRepository.find(voyageNum);
-            voyageService.end(voyage);
-            log.debug("voyage end.");
-        }
-
-        if (idcardNum != null) {
-            log.debug("carry a model.");
-            Customer customer = new Customer(new IDCardNum(idcardNum), Sex.female, null, null, null, null, null, null);
-            customerRepository.store(customer);
-            voyageService.carry(voyage, customer);
-        }
-        binder.close();
+    public void list(ReqAndResp reqAndResp) throws IOException, ServletException {
+        transaction().begin();
+        List<Voyage> voyages = voyageRepository.list();
+        Controllers.load(reqAndResp, "voyages", voyages).forward(view("origin"));
+        transaction().close();
+    }
 
 
+    public void start(ReqAndResp reqAndResp) throws IOException, ServletException {
+        Long voyageId = reqAndResp.getLong("id");
+        transaction().begin();
+        voyageService.start(voyageId);
+        transaction().close();
+        Controllers.load(reqAndResp, "voyage", voyageId + " has started").redirect("/voyages/voyage/" + voyageId);
+    }
+
+
+    public void end(ReqAndResp reqAndResp) throws IOException, ServletException {
+        Long voyageId = reqAndResp.getLong("id");
+        transaction().begin();
+        voyageService.end(voyageId);
+        transaction().close();
+        Controllers.load(reqAndResp, "voyage", voyageId + " has started").redirect("/voyages/voyage/" + voyageId);
+    }
+
+ 
+    public void index(ReqAndResp reqAndResp) throws IOException, ServletException {
+        Long voyageId = reqAndResp.getLong("id");
+        transaction().begin();
+        Voyage voyage = voyageRepository.find(voyageId);
+        Controllers.load(reqAndResp, "voyage", voyage).forward(view("index"));
+        transaction().close();
+    }
+
+    private void displayCreateForm(ReqAndResp reqAndResp) throws IOException, ServletException {
+        List<Ship> ships = ships();
+        Controllers.load(reqAndResp, "ships", ships).forward(view("new"));
+    }
+
+    private void displayCreatedVoyage(ReqAndResp reqAndResp, Long shipId) throws IOException, ServletException {
+        Voyage voyage = newVoyage(shipId);
+        Controllers.load(reqAndResp, "voyage", voyage).redirect("/voyages/voyage/" + voyage.id());
+    }
+
+    private Voyage newVoyage(Long shipId) {
+        transaction().begin();
+        Voyage voyage = voyageService.newVoyage(shipId);
+        transaction().close();
+        return voyage;
+    }
+
+    private List<Ship> ships() {
+        transaction().begin();
+        List<Ship> ships = voyageRepository.listShip();
+        transaction().close();
+        return ships;
     }
 
 

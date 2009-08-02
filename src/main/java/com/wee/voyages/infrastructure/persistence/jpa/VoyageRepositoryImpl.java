@@ -1,8 +1,13 @@
 package com.wee.voyages.infrastructure.persistence.jpa;
 
+import com.wee.voyages.application.validatation.Objects;
+import com.wee.voyages.application.validatation.rule.NoSuchPersistentObject;
 import com.wee.voyages.domain.model.customer.Customer;
 import com.wee.voyages.domain.model.customer.CustomerLog;
-import com.wee.voyages.domain.model.voyage.*;
+import com.wee.voyages.domain.model.voyage.Ship;
+import com.wee.voyages.domain.model.voyage.ShippingCompany;
+import com.wee.voyages.domain.model.voyage.Voyage;
+import com.wee.voyages.domain.model.voyage.VoyageRepository;
 
 import java.util.List;
 
@@ -13,69 +18,69 @@ import java.util.List;
  */
 public class VoyageRepositoryImpl extends AbstractRepository implements VoyageRepository {
     public CustomerLog findCustomerLog(Voyage voyage, Customer customer) {
-        CustomerLog log = (CustomerLog) createQuery(
+        return (CustomerLog) getSingleResult(createQuery(
                 "select log from CustomerLog log where log.model =:model and log.voyage =:voyage"
-        ).setParameter(1, customer).setParameter(2, voyage).getSingleResult();
-       // closeEntityManager();
-        return log;
+        ).setParameter(1, customer).setParameter(2, voyage).getResultList(), "");
     }
 
+    @SuppressWarnings("unchecked")
     public List<CustomerLog> findCustomerLog(Customer customer) {
-        List<CustomerLog> logs = createQuery(
+        return createQuery(
                 "select log from CustomerLog log where log.model =:model"
         ).setParameter(1, customer).getResultList();
-     //   closeEntityManager();
-        return logs;
     }
 
     public void store(Voyage voyage) {
-       // beginTransaction();
         entityManager().persist(voyage);
-     //   commitTransaction();
-     //   closeEntityManager();
     }
 
     public void update(Voyage voyage) {
-       //   beginTransaction();
         entityManager().merge(voyage);
-     //   commitTransaction();
-       // closeEntityManager();
     }
 
     public void storeCustomerLog(CustomerLog log) {
-        //beginTransaction();
         entityManager().persist(log);
-       // commitTransaction();
-       // closeEntityManager();
     }
 
     public void storeShip(Ship ship) {
-      //  beginTransaction();
         entityManager().persist(ship);
-      //  commitTransaction();
-       // closeEntityManager();
     }
 
     public void storeShippingCompany(ShippingCompany company) {
-       // beginTransaction();
         entityManager().persist(company);
-      //  commitTransaction();
-      //  closeEntityManager();
     }
 
-    public Ship findShip(String name) {
-        Ship ship=(Ship)createQuery(
-                "select ship from Ship ship where ship.name=:name"
-        ).setParameter("name",name).getSingleResult();
-      //  closeEntityManager();
-        return ship;
+    public Ship findShip(Long id) {
+        return (Ship) returns(find(Ship.class, id), "there are no such voyage that id is " + id);
     }
 
-    public Voyage find(VoyageNum voyageNum) {
-        Voyage voyage=(Voyage)createQuery(
-                "select voyage from Voyage voyage where voyage.voyageNum=:voyageNum"
-        ).setParameter("voyageNum",voyageNum).getSingleResult();
-       // closeEntityManager();
-        return voyage;
+    @SuppressWarnings(value = "unchecked")
+    public List<Ship> listShip() {
+        return createQuery(
+                "select ship from Ship ship"
+        ).getResultList();
+    }
+
+    @SuppressWarnings(value = "unchecked")
+    public List<Voyage> list() {
+        return (List<Voyage>) createQuery(
+                "select voyage from Voyage voyage join fetch voyage.ship "
+        ).getResultList();
+    }
+
+    public Voyage find(Long voyageId) {
+        return (Voyage) returns(find(Voyage.class, voyageId), "there are no such voyage that id is " + voyageId);
+    }
+
+    private Object returns(Object object, String message) {
+        if (Objects.noSuch(object)) {
+            throw new NoSuchPersistentObject(message);
+        }
+        return object;
+    }
+
+    private Object getSingleResult(List result, String message) {
+        result = (List) returns(result, message);
+        return result.get(0);
     }
 }

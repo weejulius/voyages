@@ -1,39 +1,68 @@
 package com.wee.voyages.application.validatation;
 
-import java.util.HashSet;
-import java.util.Set;
-
 /**
  * User: weejulius
  * Date: 2009-7-25
  * Time: 8:14:05
  */
 public class RuleResultHolder {
-    private final RuleResult success = new SuccessRuleResult();
-    private Set<BrokenRuleException> brokenRuleExceptions;
-    private Set<RuleException> ruleExceptions;
+    /*private List<BrokenRuleMessage> brokenRuleMessages;
 
-    public void newRuleException(String message) {
-        lazyLoad(ruleExceptions).add(new RuleException(message));
-    }
+
 
     public void newBrokenRuleException(String message) {
-        BrokenRuleException ruleResult= new BrokenRuleException(message);
-        lazyLoad(brokenRuleExceptions).add(ruleResult);
-        throw ruleResult;
+        lazyLoad(brokenRuleMessages).addView(brokenRuleMessages);
+    }
+
+    public void newBrokenRuleException(BrokenRuleException e){
+        lazyLoad(brokenRuleExceptions).addView(e);
 
     }
 
-    private Set lazyLoad(Set sets) {
+    private <T> List<T> lazyLoad(List<T> sets) {
         if (null == sets) {
-            sets = new HashSet();
+            sets = new ArrayList<T>();
         }
         return sets;
     }
 
-    public void throwsAll(){
+
+    //maybe null
+    public List<BrokenRuleException> brokenRuleExceptions() {
+        return brokenRuleExceptions;
+    }
+
+
+    public boolean noExceptions() {
+        return Objects.noSuch(brokenRuleExceptions);
+    }
+
+    public boolean hasExceptions(){
+        return !noExceptions();
+    }
+
+    public void throwsAll() {
 
     }
+
+    public void merge(RuleResultHolder holder) {
+        mergeBrokenRuleExceptions(holder.brokenRuleExceptions());
+    }
+
+    private void mergeBrokenRuleExceptions(List<BrokenRuleException> exceptions) {
+        brokenRuleExceptions = mergeExceptions(brokenRuleExceptions, exceptions);
+    }
+
+
+    private <T> List<T> mergeExceptions(List<T> localExceptions, List<T> exceptions) {
+        if (localExceptions == null) {
+            localExceptions = exceptions;
+        } else {
+            localExceptions.addAll(exceptions);
+        }
+        return localExceptions;
+    }*/
+
 
 
 }
