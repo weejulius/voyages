@@ -1,4 +1,4 @@
-package com.wee.voyages.interfaces.voyage.controller;
+package com.wee.mvc;
 
 import com.wee.voyages.application.validatation.BrokenRuleException;
 

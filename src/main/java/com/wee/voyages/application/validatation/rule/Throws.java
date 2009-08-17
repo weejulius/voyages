@@ -1,7 +1,7 @@
 package com.wee.voyages.application.validatation.rule;
 
 import com.wee.voyages.application.validatation.BrokenRuleException;
-import com.wee.voyages.interfaces.voyage.controller.InvalidRequestURI;
+import com.wee.mvc.InvalidRequestURI;
 
 import java.util.Map;
 

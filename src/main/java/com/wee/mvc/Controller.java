@@ -1,4 +1,4 @@
-package com.wee.voyages.interfaces.voyage.controller;
+package com.wee.mvc;
 
 import com.google.inject.Inject;
 import com.google.inject.Injector;

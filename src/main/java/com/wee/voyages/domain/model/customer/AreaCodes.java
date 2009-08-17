@@ -14,11 +14,13 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import com.wee.voyages.application.validatation.Strings;
+
 /**
  * User: weejulius
  * Date: 2009-7-24
  * Time: 8:33:11
- */
+ */   
 public class AreaCodes {
     private final static Map<String, String> codesAndNames = new HashMap<String, String>();
     private final static AreaCodes AREA_CODES = new AreaCodes();
@@ -30,8 +32,8 @@ public class AreaCodes {
     }
 
     public static AreaCodes instance() {
-        if (codesAndNames.isEmpty()) {
-            readDataFromXML();
+        if (codesAndNames.isEmpty()){
+            readDataFromXML();           
         }
         return AREA_CODES;
     }

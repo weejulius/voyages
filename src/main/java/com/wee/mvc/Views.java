@@ -1,6 +1,7 @@
-package com.wee.voyages.interfaces.voyage.controller;
+package com.wee.mvc;
 
 import com.wee.voyages.application.validatation.Objects;
+import com.wee.voyages.interfaces.voyage.controller.VoyageController;
 
 import java.util.HashMap;
 import java.util.Map;

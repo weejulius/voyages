@@ -1,4 +1,4 @@
-package com.wee.voyages.interfaces.voyage.controller;
+package com.wee.mvc;
 
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
