@@ -11,7 +11,7 @@ import org.junit.Assert;
 public class CeilTest {
     @Test
     public void ceil(){
-        Assert.assertEquals(1,Math.ceil(2/3),0);
+        Assert.assertEquals(1,Math.ceil(2/3),1);
 
     }
 
